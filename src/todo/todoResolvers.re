@@ -50,13 +50,15 @@ let resolvers: t = {
       let existingTodo =
         todos |> Js.Array.find(todo => todo##guid == input##guid);
       let todo =
-        existingTodo
-        |. Belt.Option.map(todo => {
-             set_todo_description(todo, input##description) |> ignore;
-             set_todo_completed(todo, input##completed) |> ignore;
-             todo;
-           })
-        |. Belt.Option.getExn;
+        Belt.Option.(
+          existingTodo
+          |. map(todo => {
+               set_todo_description(todo, input##description) |> ignore;
+               set_todo_completed(todo, input##completed) |> ignore;
+               todo;
+             })
+          |. getExn
+        );
       todo;
     },
   },

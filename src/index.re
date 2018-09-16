@@ -1,11 +1,13 @@
-open TodoTypeDefs;
+open Todo;
 
-open TodoResolvers;
+let server =
+  ApolloServer.createApolloServer(
+    ~typeDefs,
+    ~resolvers=Resolvers.resolvers,
+    (),
+  );
 
-let server = ApolloServer.createApolloServer(~typeDefs, ~resolvers, ());
-
-server
-|> ApolloServer.listen({"port": Js.Nullable.return(8888)})
-|> Js.Promise.then_(url =>
-     Js.log("Server ready at " ++ url##url) |> Js.Promise.resolve
+server->(ApolloServer.listen(ApolloServer.listenProps(~port=4444)))
+|> Js.Promise.then_(res =>
+     Js.log("Server ready at " ++ res##url) |> Js.Promise.resolve
    );
